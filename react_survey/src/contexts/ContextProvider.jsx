@@ -25,6 +25,7 @@ const tmpSurveys = [
     title: "Javascript Quizz",
     slug: "hochoi-youtube-channel",
     condition: true,
+    tag: ["Web"],
     status: "Vip",
     description:
       "Bài kiểm tra này không chính thức, đây chỉ là một cách hay để xem bạn biết hoặc chưa biết bao nhiêu về JavaScript.",
@@ -174,6 +175,7 @@ const tmpSurveys = [
     title: "React",
     slug: "react",
     condition: true,
+    tag: ["Web", "React.js"],
     status: "Mới nhất",
     description:
       "React giúp việc tạo giao diện người dùng tương tác trở nên dễ dàng hơn. Thiết kế các chế độ xem đơn giản cho từng trạng thái trong ứng dụng của bạn và React sẽ cập nhật và hiển thị đúng các thành phần phù hợp một cách hiệu quả khi dữ liệu của bạn thay đổi.",
@@ -185,6 +187,7 @@ const tmpSurveys = [
   {
     id: 3,
     image_url: "https://kinsta.com/wp-content/uploads/2023/02/Untitled-21.png",
+    tag: ["Web", "Laravel"],
     title: "Laravel 10",
     slug: "laravel-10",
     condition: true,
@@ -199,21 +202,27 @@ const tmpSurveys = [
 ];
 
 export const ContextProvider = ({children}) => {
-  const [currentUser, setCurrentUser] = useState({
-    name: "John Cook",
-    email: "johncook@gmail.com",
-    imageUrl: "",
-  });
-  const [userToken, setUserToken] = useState('123 ');
+  const [currentUser, setCurrentUser] = useState();
+  const [userToken, setUserToken] = useState(localStorage.getItem('TOKEN') || '');
   const [surveys, setSurveys] = useState(tmpSurveys);
+
+  const setUserCurrentToken = (token) => {
+    if (token) {
+      localStorage.setItem("TOKEN",token)
+    }else{
+      localStorage.removeItem("TOKEN")
+    }
+    setUserToken(token)
+  }
   return (
     <StateContext.Provider
       value={{
         currentUser,
         setCurrentUser,
         userToken,
-        setUserToken,
+        setUserCurrentToken,
         surveys,
+        setUserToken,
         setSurveys,
       }}
     >

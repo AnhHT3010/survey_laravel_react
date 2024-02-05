@@ -1,6 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable no-unused-vars */
 import { Link, NavLink, Navigate, Outlet} from "react-router-dom";
 import classNames from "classnames/bind";
 import { useUserStateContext } from "../contexts/ContextProvider";
+import axiosClient from "../axios";
+import { useEffect } from "react";
 function DefaultLayout() {
   const navigation = [
     {
@@ -63,17 +67,41 @@ function DefaultLayout() {
     },
   ];
 
-  const { currentUser, userToken } = useUserStateContext();
+  const { currentUser, userToken, setCurrentUser, setUserCurrentToken } =
+    useUserStateContext();
 
-  const logout = (e) => {
-    e.preventDefault();
-    console.log("Logout");
-    // Thực hiện các hành động đăng xuất ở đây và chuyển hướng nếu cần
+
+  if (!userToken) {
+    return <Navigate to="login" />;
+  }
+
+  const logout = (ev) => {
+    ev.preventDefault();
+    axiosClient.post("/logout")
+      .then((res) => {
+        setCurrentUser({});
+        setUserCurrentToken(null);
+    });
   };
 
-  if(!userToken){
-    return <Navigate to='login' />
-  }
+  useEffect(() => {
+    const token = localStorage.getItem("TOKEN");
+    if (token) {
+      axiosClient
+        .get("/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setCurrentUser(response.data); // Cập nhật dữ liệu người dùng hiện tại
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  }, []);
 
   return (
     <div>
@@ -107,25 +135,19 @@ function DefaultLayout() {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
           <div className="flex items-center gap-4">
-            {currentUser.imageUrl == "" ? (
-              <img
-                className="w-10 h-10 mb-2 rounded-full"
-                src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
-                alt=""
-              />
-            ) : (
-              <img
-                className="w-10 h-10 mb-2 rounded-full"
-                src={currentUser.imageUrl}
-                alt=""
-              />
+            <img
+              className="w-10 h-10 mb-2 rounded-full"
+              src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
+              alt=""
+            />
+            {currentUser && (
+              <>
+                <div>{currentUser.name}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  {currentUser.email}
+                </div>
+              </>
             )}
-            <div className="font-medium dark:text-white">
-              <div>{currentUser.name}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                {currentUser.email}
-              </div>
-            </div>
           </div>
           <ul className="space-y-2 font-medium mt-2">
             {navigation.map((item) => (

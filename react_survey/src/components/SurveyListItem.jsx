@@ -56,23 +56,6 @@ function SurveyListItem({ survey, onDeleteClick }) {
               </span>
             </div>
             <div className="flex  justify-between items-center mt-2">
-              {/* <button className="flex flex-row items-center text-yellow-500 hover:text-yellow-600 hover:border-yellow-600 border-solid border-2 border-yellow-400 bg-opacity-5 bg-orange-500 p-1 rounded-md">
-                <div>Chỉnh sửa</div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 ml-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </button> */}
               <TButton to={`/surveys/${survey.id}`} color="yellow">
                 <div>Chỉnh sửa</div>
                 <svg

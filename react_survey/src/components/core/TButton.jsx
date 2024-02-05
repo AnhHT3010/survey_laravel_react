@@ -8,18 +8,20 @@ function TButton({
   href = "",
   link = false,
   target = "_blank",
+  styles = "",
   onClick = () => {},
   children,
 }) {
   let classes = [
     "flex",
+    "items-center",
     "border",
     "border-2",
     "border-solid",
     "text-sm",
     "whitespace-nowrap",
+    styles,
   ];
-
   if (link) {
     classes = [...classes, "transition-colors"];
     switch (color) {
@@ -58,7 +60,13 @@ function TButton({
         break;
     }
   } else {
-    classes = [...classes, "text-white", "items-center", "focus:ring-2", "focus:ring-offset-2"];
+    classes = [
+      ...classes,
+      "text-white",
+      "items-center",
+      "focus:ring-2",
+      "focus:ring-offset-2",
+    ];
     switch (color) {
       case "red":
         classes = [
@@ -75,10 +83,10 @@ function TButton({
       case "blue":
         classes = [
           ...classes,
-          "bg-cyan-500",
-          "text-blue-500",
+          "bg-blue-700",
           "hover:text-blue-600",
-          "hover:bg-cyan-600",
+          "hover:bg-blue-600",
+          "hover:text-white",
           "border-blue-400",
           "hover:border-blue-600",
         ];
@@ -153,6 +161,7 @@ TButton.propTypes = {
   target: PropTypes.string,
   onClick: PropTypes.func,
   children: PropTypes.node,
+  styles: PropTypes.string,
 };
 
 export default TButton
